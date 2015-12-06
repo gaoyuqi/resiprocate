@@ -1365,7 +1365,7 @@ SdpContents::Session::Medium::parse(ParseBuffer& pb)
             for (int i = 1; i < num; i++)
             {
                addConnection(con);
-               mConnections.back().mAddress = before + Data(after+i);
+               mConnections.back().mAddress = before + Data((Int32)(after+i));
             }
          }
          if (addr[i] == ':') // add a number of ipv6 connections

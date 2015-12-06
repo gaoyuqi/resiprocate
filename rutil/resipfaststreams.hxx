@@ -171,7 +171,7 @@ class ResipFastOStream : public ResipBasicIOStream
 
          return *this;
       }
-
+#if !defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
       ResipFastOStream& operator<<(long l)
       {
          if (!buf_)
@@ -209,7 +209,7 @@ class ResipFastOStream : public ResipBasicIOStream
 
          return *this;
       }
-
+#endif
       ResipFastOStream& operator<<(Int64 i64)
       {
          if (!buf_)

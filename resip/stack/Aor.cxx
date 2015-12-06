@@ -169,7 +169,7 @@ Aor::value() const
          if (mPort != 0)
          {
             strm << Symbols::COLON;
-            strm << Data(mPort);
+            strm << Data((Int32)mPort);
          }
       }
    }

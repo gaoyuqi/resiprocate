@@ -51,7 +51,7 @@ BaseSubscription::matches(const SipMessage& msg)
       else
       {
          return (mEventType == "refer" && 
-                 Data(msg.header(h_CSeq).sequence()) == mSubscriptionId);      
+                 Data((UInt32)msg.header(h_CSeq).sequence()) == mSubscriptionId);
       }
    }
 }

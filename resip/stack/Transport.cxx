@@ -298,7 +298,7 @@ Transport::make503(SipMessage& msg, UInt16 retryAfter)
    // .bwc. msg is completely unverified. Handle with caution.
    result=makeSendData(dest, Data::Empty, Data::Empty, remoteSigcompId);
    static const Data retryAfterHeader("Retry-After: ");
-   Data value(retryAfter);
+   Data value((UInt32)retryAfter);
    Helper::makeRawResponse(result->data, msg, 503, retryAfterHeader+value+"\r\n");
 
   return result;

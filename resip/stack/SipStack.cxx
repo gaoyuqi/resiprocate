@@ -679,7 +679,7 @@ SipStack::addAlias(const Data& domain, int port)
    resip_assert(!mShuttingDown);
 
    Lock lock(mDomainsMutex);
-   mDomains[domain + ":" + Data(portToUse)]++;
+   mDomains[domain + ":" + Data((Int32)portToUse)]++;
 
    if(mUri.host().empty())
    {
@@ -697,7 +697,7 @@ SipStack::removeAlias(const Data& domain, int port)
    resip_assert(!mShuttingDown);
 
    Lock lock(mDomainsMutex);
-   DomainsMap::iterator it = mDomains.find(domain + ":" + Data(portToUse));
+   DomainsMap::iterator it = mDomains.find(domain + ":" + Data((Int32)portToUse));
    if(it != mDomains.end())
    {
       if(--it->second == 0)
@@ -793,7 +793,7 @@ SipStack::isMyDomain(const Data& domain, int port) const
 {
    Lock lock(mDomainsMutex);
    return (mDomains.count(domain + ":" +
-                          Data(port == 0 ? Symbols::DefaultSipPort : port)) != 0);
+                          Data((Int32)(port == 0 ? Symbols::DefaultSipPort : port))) != 0);
 }
 
 bool

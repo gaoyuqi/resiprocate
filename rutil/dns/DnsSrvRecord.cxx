@@ -48,7 +48,7 @@ DnsSrvRecord::DnsSrvRecord(const RROverlay& overlay)
 
 bool DnsSrvRecord::isSameValue(const Data& value) const
 {
-   return value == (mTarget + ":" + Data(mPort));
+   return value == (mTarget + ":" + Data((Int32)mPort));
 }
 
 EncodeStream&

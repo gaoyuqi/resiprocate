@@ -845,7 +845,7 @@ Uri::getAorInternal(bool dropScheme, bool addPort, Data& aor) const
    if(addPort)
    {
       aor += Symbols::COLON;
-      aor += Data(mPort);
+      aor += Data((Int32)mPort);
    }
 }
 

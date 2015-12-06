@@ -644,7 +644,7 @@ DnsResult::primeResults()
          }
          item.domain = next.key;
          item.rrType = T_SRV;
-         item.value = next.target + ":" + Data(next.port);
+         item.value = next.target + ":" + Data((Int32)next.port);
          mCurrentPath.push_back(item);
          lookupHost(next.target);
       }

@@ -26,6 +26,8 @@ bin.gopt.*
 obj.gopt.*
 obj.prof.*
 bin.prof.*
+xcuserdata
+xcshareddata
 
 repro/reproInfo.hxx
 repro/repro

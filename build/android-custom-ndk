@@ -28,16 +28,16 @@ fi
 # clone it and run "prebuilt/deploy-prebuilt.sh" or just "ndk-build"
 export OPENSSL_HOME=${HOME}/ws/openssl/openssl-android
 
-if [ ! -d ${OPENSSL_HOME} ];
-then
-  echo "Can't find ${OPENSSL_HOME}"
-  exit 1
-fi
+#if [ ! -d ${OPENSSL_HOME} ];
+#then
+#  echo "Can't find ${OPENSSL_HOME}"
+#  exit 1
+#fi
 
-CPUS=`cat /proc/cpuinfo | grep -c ^proc`
-PAR=`expr $CPUS + 1`
+#CPUS=`cat /proc/cpuinfo | grep -c ^proc`
+#PAR=`expr $CPUS + 1`
 
-STAGE_PREBUILT=`mktemp -d`
+STAGE_PREBUILT=`mktemp -d /Users/morosev/Denovolab/denovolab-rtc/source/thirdParty/resiprocate/tmp/XXXXXXXXXX`
 
 function cleanup {
   if [ ! -z "${STAGE_PREBUILT}" ];
@@ -50,7 +50,7 @@ function cleanup {
   fi
 }
 
-trap cleanup EXIT
+#trap cleanup EXIT
 
 for MOD_SRC in ${MODS_DIR}/* ;
 do
@@ -58,17 +58,23 @@ do
   echo "Trying modulation ${MOD_SRC} ..."
   MOD_NAME=`basename ${MOD_SRC}`
 
+  if [ "$MOD_SRC" != "build/android/modulations/armeabi-v7a" ]; then
+    continue
+  fi
+
   export CPPFLAGS=""
   export CXXFLAGS=""
   export LDFLAGS=""
 
   source ${MOD_SRC}
 
-  MY_NDK=`mktemp -d`
+  MY_NDK=`mktemp -d /Users/morosev/Denovolab/denovolab-rtc/source/thirdParty/resiprocate/tmp/XXXXXXXXXX`
   echo "Creating a toolchain in ${MY_NDK}"
 
+#  ${NDK_HOME}/build/tools/make-standalone-toolchain.sh --platform=${PLATFORM} \
+#    --install-dir=${MY_NDK} --system=linux-x86_64 --arch=${MOD_ARCH}
   ${NDK_HOME}/build/tools/make-standalone-toolchain.sh --platform=${PLATFORM} \
-    --install-dir=${MY_NDK} --system=linux-x86_64 --arch=${MOD_ARCH}
+    --install-dir=${MY_NDK} --system=darwin-x86_64 --toolchain=arm-linux-androideabi-4.8 --llvm-version=3.6 --stl=libc++
 
   export CROSS_COMPILE
   export TOOLCHAIN_PREFIX=${CROSS_COMPILE}
@@ -80,14 +86,16 @@ do
   export AR=${TOOLCHAIN_PREFIX}-ar
   export AS=${TOOLCHAIN_PREFIX}-as
   export NM=${TOOLCHAIN_PREFIX}-nm
-  export CC=${TOOLCHAIN_PREFIX}-gcc
-  export CXX=${TOOLCHAIN_PREFIX}-g++
+#  export CC=${TOOLCHAIN_PREFIX}-gcc
+  export CC=clang
+#  export CXX=${TOOLCHAIN_PREFIX}-g++
+  export CXX=clang++
   export LD=${TOOLCHAIN_PREFIX}-ld
   export RANLIB=${TOOLCHAIN_PREFIX}-ranlib
 
-  export CPPFLAGS="${CPPFLAGS} -I${OPENSSL_HOME}/include"
+#  export CPPFLAGS="${CPPFLAGS} -I${OPENSSL_HOME}/include"
   export CXXFLAGS="${CXXFLAGS} -Os"
-  export LDFLAGS="${LDFLAGS} -L${OPENSSL_HOME}/libs/${MOD_NAME}"
+#  export LDFLAGS="${LDFLAGS} -L${OPENSSL_HOME}/libs/${MOD_NAME}"
 
   autoreconf -fi
 
@@ -96,13 +104,14 @@ do
     --host=${CROSS_COMPILE} \
     --with-sysroot=${SYSROOT} \
     --enable-android \
-    --with-ssl \
+#    --with-ssl \
     "$@"
 
   for proj in $PROJECTS ;
   do
     make -C $proj clean
-    make -C $proj -j${PAR} DESTDIR=${STAGE_PREBUILT} install
+#    make -C $proj -j${PAR} DESTDIR=${STAGE_PREBUILT} install
+    make -C $proj DESTDIR=${STAGE_PREBUILT} install
   done
 
   #for proj in $PROJECTS ;
@@ -118,7 +127,7 @@ done
 echo "Copying libs into place ..."
 mkdir -p ${PROJECT_DIST}
 cp -r ${STAGE_PREBUILT}/libs/* ${PROJECT_DIST}
-cp build/android/prebuilt/Android.mk ${PROJECT_DIST}
+#cp build/android/prebuilt/Android.mk ${PROJECT_DIST}
 rm -rf "${STAGE_PREBUILT}"
 
 echo "All done"

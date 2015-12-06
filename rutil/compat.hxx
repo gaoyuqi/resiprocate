@@ -91,7 +91,6 @@ inline int c99_snprintf(char* str, size_t size, const char* format, ...)
    // .amr. If you get linker or type conflicts around UInt32, then use this define
 #  if defined(RESIP_APPLE_USE_SYSTEM_TYPES)
 #     include <TargetConditionals.h>
-#     include <CoreServices/CoreServices.h>
 #  endif
 #  if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) || MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_2
       // you don't include the SDK or you're running 10.3 or above
@@ -144,8 +143,11 @@ typedef char           Int8;
 typedef short          Int16;
 typedef int            Int32;
 #else
-# On Apple platforms, MacTypes.h should provide the types:
+// On Apple platforms, MacTypes.h should provide the types:
 #include <MacTypes.h>
+typedef SInt8          Int8;
+typedef SInt16         Int16;
+typedef SInt32         Int32;
 #endif
 
 #if defined( TARGET_OS_IPHONE )

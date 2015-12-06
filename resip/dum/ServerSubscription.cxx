@@ -31,7 +31,7 @@ ServerSubscription::ServerSubscription(DialogUsageManager& dum,
    if (req.header(h_RequestLine).method() == REFER && req.header(h_To).exists(p_tag))
    {
       // If this is an in-dialog REFER, then use a subscription id
-      mSubscriptionId = Data(req.header(h_CSeq).sequence());
+      mSubscriptionId = Data((Int32)req.header(h_CSeq).sequence());
    }   
    Data key = getEventType() + getDocumentKey();
    mDum.mServerSubscriptions.insert(DialogUsageManager::ServerSubscriptions::value_type(key, this));
